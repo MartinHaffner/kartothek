@@ -472,8 +472,7 @@ def copy_cube(
 ):
     """
     Copy cube from one store to another.
-    .. warning::
-        A failing copy operation can not be rolled back if the `overwrite` flag is enabled
+    .. warnings:: A failing copy operation can not be rolled back if the `overwrite` flag is enabled
         and might leave the overwritten dataset in an inconsistent state.
     Parameters
     ----------
