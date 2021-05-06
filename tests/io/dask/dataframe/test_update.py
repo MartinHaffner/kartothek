@@ -32,6 +32,12 @@ def _update_dataset(partitions, *args, **kwargs):
     else:
         partitions = None
 
+    # Replace `table_name` with `table` keyword argument to enable shared test code
+    # via `bound_update_dataset` fixture
+    if "table_name" in kwargs:
+        kwargs["table"] = kwargs["table_name"]
+        del kwargs["table_name"]
+
     ddf = update_dataset_from_ddf(partitions, *args, **kwargs)
 
     s = pickle.dumps(ddf, pickle.HIGHEST_PROTOCOL)
@@ -42,22 +48,6 @@ def _update_dataset(partitions, *args, **kwargs):
 
 def _return_none():
     return None
-
-
-def test_delayed_as_delete_scope(store_factory, df_all_types):
-    # Check that delayed objects are allowed as delete scope.
-    tasks = update_dataset_from_ddf(
-        dd.from_pandas(df_all_types, npartitions=1),
-        store_factory,
-        dataset_uuid="output_dataset_uuid",
-        table="core",
-        delete_scope=dask.delayed(_return_none)(),
-    )
-
-    s = pickle.dumps(tasks, pickle.HIGHEST_PROTOCOL)
-    tasks = pickle.loads(s)
-
-    tasks.compute()
 
 
 @pytest.mark.parametrize("shuffle", [True, False])

@@ -8,6 +8,20 @@ Kartothek 4.1.0 (2021-03-26)
 * Extends :meth:`~kartothek.io.eager_cube.copy_cube` to allow renaming a cube while copying
 
 Kartothek 4.0.0 (2021-03-XY)
+=======
+Kartothek 4.0.2 (2021-04-xx)
+============================
+
+* Fix a bug in ``MetaPartition._reconstruct_index_columns`` that would raise an ``IndexError`` when loading few columns of a dataset with many primary indices.
+* Add :meth:`~kartothek.io.eager.copy_dataset` to copy and optionally rename datasets within one store or between stores (eager only)
+* Add renaming option to :meth:`~kartothek.io.eager_cube.copy_cube`
+
+Kartothek 4.0.1 (2021-04-13)
+============================
+
+* Fixed dataset corruption after updates when table names other than "table" are used (#445).
+
+Kartothek 4.0.0 (2021-03-17)
 ============================
 
 This is a major release of kartothek with breaking API changes.
@@ -33,6 +47,10 @@ This is a major release of kartothek with breaking API changes.
 * Remove `metadata`, `df_serializer`, `overwrite`, `metadata_merger` from :func:`kartothek.io.eager.write_single_partition`
 * :func:`~kartothek.io.eager.store_dataframes_as_dataset` now requires a list as an input
 * Default value for argument `date_as_object` is now universally set to ``True``. The behaviour for `False` will be deprecated and removed in the next major release
+* No longer allow to pass `delete_scope` as a delayed object to :func:`~kartothek.io.dask.dataframe.update_dataset_from_ddf`
+* :func:`~kartothek.io.dask.dataframe.update_dataset_from_ddf` and :func:`~kartothek.io.dask.dataframe.store_dataset_from_ddf` now return a `dd.core.Scalar` object. This enables all `dask.DataFrame` graph optimizations by default.
+* Remove argument `table_name` from :func:`~kartothek.io.dask.dataframe.collect_dataset_metadata`
+
 
 Version 3.20.0 (2021-03-15)
 ===========================

@@ -471,6 +471,7 @@ class MetaPartition(Iterable):
             schema=schema,
             partition_keys=metapartition.partition_keys or None,
             logical_conjunction=metapartition.logical_conjunction or None,
+            table_name=metapartition.table_name,
         )
 
         # Add metapartition information to the new object
@@ -766,7 +767,8 @@ class MetaPartition(Iterable):
             # indexer call is slow, so only do that if really necessary
             df = df.reindex(columns=cleaned_original_columns, copy=False)
 
-        for pos, (primary_key, value) in enumerate(key_indices):
+        pos = 0
+        for primary_key, value in key_indices:
             # If there are predicates, don't reconstruct the index if it wasn't requested
             if columns is not None and primary_key not in columns:
                 continue
@@ -800,6 +802,7 @@ class MetaPartition(Iterable):
                 if convert_to_date:
                     value = pd.Timestamp(value).to_pydatetime().date()
             df.insert(pos, primary_key, value)
+            pos += 1
 
         return df
 
@@ -1109,6 +1112,7 @@ class MetaPartition(Iterable):
                     f"{label}"
                 ),
                 partition_keys=partition_on,
+                table_name=self.table_name,
             )
             new_mp = new_mp.add_metapartition(tmp_mp, schema_validation=False)
         if self.indices:
